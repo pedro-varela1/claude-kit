@@ -1,0 +1,108 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{details}[2026/10/09 Technical note style]
+
+% Layout and engine
+\RequirePackage[a4paper, margin=25mm, top=24mm, bottom=28mm]{geometry}
+\RequirePackage{fontspec, unicode-math, microtype}
+\RequirePackage{xcolor, graphicx, booktabs, siunitx, enumitem, titlesec, caption, amsmath, amsthm}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{tikz, pgfplots}
+\RequirePackage[authoryear, round]{natbib}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage[capitalise, noabbrev]{cleveref}
+\usetikzlibrary{arrows.meta, positioning, calc, fit}
+\pgfplotsset{compat=1.18}
+
+% Fonts: Source Serif and Source Sans with STIX Two Math, falling back to older names or Latin Modern
+\IfFontExistsTF{Source Serif 4}{\setmainfont{Source Serif 4}}
+  {\IfFontExistsTF{Source Serif Pro}{\setmainfont{Source Serif Pro}}{}}
+\IfFontExistsTF{Source Sans 3}{\setsansfont{Source Sans 3}}
+  {\IfFontExistsTF{Source Sans Pro}{\setsansfont{Source Sans Pro}}{}}
+\IfFontExistsTF{STIX Two Math}{\setmathfont{STIX Two Math}[Scale=MatchLowercase]}{}
+
+% Palette, shared with details.mplstyle and the decision UI
+\definecolor{ink}{HTML}{1C2430}
+\definecolor{accent}{HTML}{0B6E6E}
+\definecolor{muted}{HTML}{5B6573}
+\definecolor{tint}{HTML}{F1F4F6}
+\definecolor{series1}{HTML}{0B6E6E}
+\definecolor{series2}{HTML}{C2732B}
+\definecolor{series3}{HTML}{2F5D8A}
+\definecolor{series4}{HTML}{5B6573}
+\hypersetup{colorlinks, allcolors=accent}
+
+% Text
+\setlength\parindent{0pt}
+\setlength\parskip{0.55em}
+\setlist{nosep, leftmargin=1.4em, topsep=0.2em}
+\sisetup{group-minimum-digits=4, group-separator={\,}}
+
+\newcommand\kicker[2][accent]{%
+  {\sffamily\footnotesize\bfseries\color{#1}\addfontfeatures{LetterSpace=8}\MakeUppercase{#2}}}
+
+% Title block
+\newcommand\notetype[1]{\def\@notetype{#1}}
+\notetype{Technical note}
+\renewcommand\maketitle{%
+  {\noindent\kicker{\@notetype}\par}\vspace{0.5em}
+  {\noindent\sffamily\fontsize{22}{26}\selectfont\bfseries\color{ink}\@title\par}\vspace{0.7em}
+  {\noindent\sffamily\small\color{muted}\@author\enspace·\enspace\@date\par}\vspace{0.6em}
+  {\noindent\color{muted!35}\rule{\linewidth}{0.4pt}\par}\vspace{1.1em}}
+
+\renewenvironment{abstract}
+  {\par\noindent\kicker{Abstract}\par\vspace{0.3em}\noindent\ignorespaces}
+  {\par\vspace{0.3em}}
+
+% Headings
+\titleformat{\section}{\sffamily\large\bfseries\color{ink}}{\textcolor{accent}{\thesection}}{0.7em}{}
+\titleformat{\subsection}{\sffamily\normalsize\bfseries\color{ink}}{\textcolor{accent}{\thesubsection}}{0.7em}{}
+\titleformat{\paragraph}[runin]{\sffamily\normalsize\bfseries\color{ink}}{}{0pt}{}[.]
+\titlespacing*{\section}{0pt}{1.5em}{0.45em}
+\titlespacing*{\subsection}{0pt}{1.1em}{0.3em}
+\titlespacing*{\paragraph}{0pt}{0.6em}{0.6em}
+
+% Floats and captions
+\DeclareCaptionFont{accent}{\color{accent}}
+\DeclareCaptionFont{muted}{\color{muted}}
+\captionsetup{font={small,sf,muted}, labelfont={bf,accent}, labelsep=quad,
+  justification=raggedright, singlelinecheck=false}
+\setlength\@fptop{0pt}
+\setlength\@fpbot{0pt plus 1fil}
+
+% Statements
+\newtheoremstyle{note}{0.6em}{0.6em}{}{}{\sffamily\bfseries\color{accent}}{.}{0.5em}{}
+\theoremstyle{note}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+
+% Boxes
+\tcbset{notebox/.style={enhanced, breakable, frame hidden, boxrule=0pt, sharp corners,
+  left=10pt, right=8pt, top=6pt, bottom=6pt, before skip=0.8em, after skip=0.8em}}
+\newtcolorbox{keypoint}{notebox, colback=accent!6,
+  before upper={\kicker{Key point}\par\vspace{0.25em}}}
+\newtcolorbox{limitation}{notebox, colback=series2!6, borderline west={2pt}{0pt}{series2},
+  before upper={\kicker[series2]{Limitation}\par\vspace{0.25em}}}
+
+% Diagrams and plots share one visual language
+\tikzset{
+  block/.style={draw=ink, line width=0.5pt, fill=tint, rounded corners=1.5pt,
+    minimum height=6.5mm, minimum width=8mm, inner sep=2.5pt, font=\small},
+  focus/.style={block, draw=accent, fill=accent!12},
+  op/.style={draw=ink, line width=0.5pt, circle, inner sep=0.6pt, fill=white},
+  flow/.style={-{Stealth[length=1.6mm]}, line width=0.5pt, draw=ink},
+  note/.style={font=\footnotesize\sffamily, text=muted},
+}
+\pgfplotscreateplotcyclelist{details}{
+  {series1, thick, mark=none}, {series2, thick, mark=none},
+  {series3, thick, mark=none}, {series4, thick, dashed, mark=none}}
+\pgfplotsset{every axis/.append style={
+  cycle list name=details, axis lines=left, axis line style={muted},
+  tick style={muted}, tick label style={font=\footnotesize\sffamily},
+  label style={font=\small\sffamily}, legend style={draw=none, font=\footnotesize\sffamily},
+  grid=major, grid style={tint!60!muted!25}, width=0.8\linewidth, height=0.5\linewidth}}
+
+% Bibliography
+\renewcommand\bibfont{\small}
+\setlength\bibsep{0.35em}
+\renewcommand\refname{References}

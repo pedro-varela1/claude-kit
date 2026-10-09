@@ -1,0 +1,42 @@
+{
+  "id": "001",
+  "title": "Família de modelo para o surrogate da equação do calor",
+  "context": "Precisamos de um surrogate rápido para $\\partial_t u = \\nabla\\cdot(\\kappa\\nabla u)$ em placas com condutividade variável. O orçamento de treino é uma GPU por um dia. Esta rodada fixa a família de modelo; dados e métricas vêm na próxima, porque dependem dela.",
+  "questions": [
+    {
+      "id": "family",
+      "title": "Qual família de modelo deve aprender o solution operator?",
+      "explanation": "As três mapeiam o campo inicial e $\\kappa$ para $u(\\cdot, t)$. A diferença está em **onde gastam capacidade**:\n\n| | Independe da resolução | Dados necessários | Adequação à difusão |\n|---|---|---|---|\n| FNO | sim | moderado | alta |\n| U-Net | não | moderado | média |\n| DeepONet | sim | alto | baixa com dados abruptos |",
+      "options": [
+        {
+          "id": "fno",
+          "label": "Fourier Neural Operator",
+          "summary": "Camadas espectrais truncadas nos $k_{\\max}$ modos mais baixos.",
+          "details": "- A difusão amortece o modo $k$ como $e^{-\\kappa |k|^2 t}$, então truncar descarta pouco.\n- Exige grade uniforme; domínios irregulares precisam ser interpolados.\n- Li et al. (2021) relatam erro em torno de 1% em EDPs semelhantes.",
+          "recommended": true
+        },
+        {
+          "id": "unet",
+          "label": "U-Net",
+          "summary": "Encoder-decoder convolucional numa grade fixa.",
+          "details": "- Maduro e fácil de treinar.\n- Preso à resolução de treino: grade nova significa retreinar, e nossos experimentos mudam a grade."
+        },
+        {
+          "id": "deeponet",
+          "label": "DeepONet",
+          "summary": "Redes branch e trunk com uma base de saída aprendida.",
+          "details": "- Funciona em pontos de consulta arbitrários.\n- A base aprendida converge devagar para condições iniciais abruptas, que são nosso caso principal."
+        }
+      ]
+    },
+    {
+      "id": "precision",
+      "title": "Precisão numérica do treino",
+      "explanation": "Independe da família de modelo, por isso está nesta mesma rodada.",
+      "options": [
+        { "id": "fp32", "label": "float32", "summary": "Simples e seguro para camadas espectrais.", "recommended": true },
+        { "id": "bf16", "label": "bfloat16 misto", "summary": "Cerca de 1,6× mais rápido, mas as FFTs exigem cuidado com acumulação." }
+      ]
+    }
+  ]
+}

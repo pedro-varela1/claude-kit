@@ -1,0 +1,26 @@
+{
+  "outputStyle": "Explanatory",
+  "permissions": {
+    "ask": [
+      "Edit(details/**)",
+      "Bash(latexmk *)",
+      "Bash(lualatex *)",
+      "Bash(xelatex *)",
+      "Bash(pdflatex *)",
+      "Edit(~/.claude/kit/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/kit/hooks/guard_details.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
