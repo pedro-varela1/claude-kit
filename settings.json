@@ -7,13 +7,17 @@
       "Bash(lualatex *)",
       "Bash(xelatex *)",
       "Bash(pdflatex *)",
+      "PowerShell(latexmk *)",
+      "PowerShell(lualatex *)",
+      "PowerShell(xelatex *)",
+      "PowerShell(pdflatex *)",
       "Edit(~/.claude/kit/**)"
     ]
   },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|PowerShell",
         "hooks": [
           {
             "type": "command",

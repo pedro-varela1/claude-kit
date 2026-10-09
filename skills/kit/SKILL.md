@@ -39,7 +39,7 @@ permission prompt, so Pedro sees each file being written.
   in a skill, not in `CLAUDE.md` or an unconditional rule.
 - Add an entry at the top of `CHANGELOG.md`: date, one line per change.
 - Commit in the kit repository: `git -C <kit> add -A && git -C <kit> commit -m "<summary>"`.
-- If `settings.json` changed, run `python3 <kit>/install.py`.
+- If `settings.json` changed, run `python3 <kit>/install.py` (`python` on Windows).
 - Mention that new or edited skills and rules load in new sessions.
 
 ## Rules for kit content

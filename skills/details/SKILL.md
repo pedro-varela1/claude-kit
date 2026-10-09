@@ -45,7 +45,7 @@ model, method, theory, results or limitations qualify. If none, leave `details/`
 ## Creating details/
 
 The same approval protocol applies to the first version: propose the outline and the content of
-each section first. Then create the folder with `cp -r ${CLAUDE_SKILL_DIR}/template details` (the
+each section first. Then create the folder with `cp -r "${CLAUDE_SKILL_DIR}/template" details` (the
 only shell write into `details/` the guard hook allows), set the title and write the sections.
 
 ## Writing
@@ -76,8 +76,9 @@ latexmk -r details/latexmkrc -cd details/details.tex
 
 Run it from the project root. `details/latexmkrc` selects LuaLaTeX and sends auxiliary files to
 `details/build/` (gitignored); the PDF stays at `details/details.pdf` and is committed. Fonts:
-Source Serif 4, Source Sans 3 and STIX Two Math, which TeX Live ships; the style falls back to Latin
-Modern if they're missing.
+Source Serif 4, Source Sans 3 and STIX Two Math, which TeX Live ships and MiKTeX installs as
+`sourceserif`, `sourcesans` and `stix2-otf`; the style falls back to Latin Modern if they're missing.
+MiKTeX's `latexmk` needs Perl: on Windows, run it with Bash (Git Bash ships Perl), not PowerShell.
 
 Before reporting: zero errors, no undefined references or citations, no overfull boxes wider than a
 couple of points. Render the pages (`pdftoppm -r 80 -png details/details.pdf /tmp/details`) and look

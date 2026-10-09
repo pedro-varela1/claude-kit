@@ -158,6 +158,8 @@ def main() -> None:
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if len(args) != 1:
         fail("usage: decide.py <round.json> [--no-browser]")
+    # Windows pipes default to the ANSI code page, which would garble non-ASCII paths in the output.
+    sys.stdout.reconfigure(encoding="utf-8")
     try:
         serve(Path(args[0]).resolve(), open_browser="--no-browser" not in sys.argv)
     except KeyboardInterrupt:

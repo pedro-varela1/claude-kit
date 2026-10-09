@@ -46,8 +46,10 @@ Number rounds per project: list `.claude/decisions/` and take the next `NNN`. Wr
 Run it with the **Monitor** tool, deadline 30 minutes:
 
 ```
-python3 ${CLAUDE_SKILL_DIR}/decide.py .claude/decisions/NNN-<slug>.json
+python3 "${CLAUDE_SKILL_DIR}/decide.py" .claude/decisions/NNN-<slug>.json
 ```
+
+On Windows the interpreter is `python`.
 
 - First line `open <url>`: the browser opened. Tell Pedro in one line that the round is open, with
   the link in case the browser didn't open, then stop and wait.
