@@ -14,11 +14,19 @@ import zlib
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import unquote
 
 PAGE = Path(__file__).with_name("page.html")
 VENDOR = Path(__file__).with_name("vendor")
 PLACEHOLDER = "/*ROUND*/"
-CONTENT_TYPES = {".js": "text/javascript", ".css": "text/css", ".woff2": "font/woff2"}
+CONTENT_TYPES = {
+    ".js": "text/javascript",
+    ".css": "text/css",
+    ".woff2": "font/woff2",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".jpg": "image/jpeg",
+}
 PORT_RANGE = (49152, 16384)
 
 
@@ -104,16 +112,19 @@ def serve(path: Path, open_browser: bool) -> None:
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:
-            if not self.path.startswith("/vendor/"):
+            # Figures are referenced relative to the decisions folder, like in the Markdown record.
+            if self.path.startswith("/files/"):
+                self.send_file(path.parent.resolve(), self.path.removeprefix("/files/"))
+            elif self.path.startswith("/vendor/"):
+                self.send_file(VENDOR.resolve(), self.path.removeprefix("/vendor/"))
+            else:
                 self.reply(200, page, "text/html; charset=utf-8")
-                return
-            asset = (VENDOR / self.path.removeprefix("/vendor/")).resolve()
-            if asset.is_relative_to(VENDOR) and asset.is_file():
-                self.reply(
-                    200,
-                    asset.read_bytes(),
-                    CONTENT_TYPES.get(asset.suffix, "application/octet-stream"),
-                )
+
+        def send_file(self, root: Path, relative: str) -> None:
+            asset = (root / unquote(relative)).resolve()
+            if asset.is_relative_to(root) and asset.is_file():
+                content_type = CONTENT_TYPES.get(asset.suffix, "application/octet-stream")
+                self.reply(200, asset.read_bytes(), content_type)
             else:
                 self.reply(404, b"", "text/plain")
 

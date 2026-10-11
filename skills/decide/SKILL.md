@@ -38,6 +38,8 @@ Number rounds per project: list `.claude/decisions/` and take the next `NNN`. Wr
   exactly one option.
 - Markdown works in `context`, `explanation`, `summary` and `details`: paragraphs, lists, tables,
   `code`, links, and math as `$…$` or `$$…$$`.
+- Figures: save PNG or SVG in `.claude/decisions/NNN-<slug>/` and reference them as
+  `![caption](NNN-<slug>/figure.png)`; the page and the Markdown record both resolve that path.
 - Content in Portuguese, technical terms in English. Say why the recommended option wins and why each
   alternative loses for this problem. Don't hide a weak point of the recommendation.
 

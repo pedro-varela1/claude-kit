@@ -4,6 +4,8 @@
 
 - `/details` template: `latexmkrc` puts the project folder on `BIBINPUTS`, so BibTeX running in
   `build/` no longer picks another `references.bib` from the TeX path.
+- `/decide`: rounds can show figures; the UI serves files from the decisions folder and renders
+  `![caption](path)`.
 
 ## 2026-10-09
 
