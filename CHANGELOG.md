@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-11
+
+- `/details` template: `latexmkrc` puts the project folder on `BIBINPUTS`, so BibTeX running in
+  `build/` no longer picks another `references.bib` from the TeX path.
+
 ## 2026-10-09
 
 - Windows support: the installer links with directory junctions, writes imports and settings paths
